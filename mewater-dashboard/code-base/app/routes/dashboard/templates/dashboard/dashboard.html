@@ -1,0 +1,596 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Info Cards -->
+<div class="row">
+    <div class="col-xl-6 col-sm-6 mb-xl-0 mb-4">
+        <div class="card">
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="numbers">
+                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Current Consumption</p>
+                            <h5 class="font-weight-bolder">
+                                {{ current_consumption }} Litres
+                            </h5>
+                            <!-- <p class="mb-0">
+                      <span class="text-success text-sm font-weight-bolder">10 L</span>
+                      less yesterday
+                    </p> -->
+                        </div>
+                    </div>
+                    <div class="col-4 text-end">
+                        <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                            <i class="ni ni-watch-time text-lg opacity-10" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-sm-6 mb-xl-0 mb-4">
+        <div class="card">
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="numbers">
+                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Detected Leaks</p>
+                            <h5 class="font-weight-bolder">
+                                {% if current_leakage_info == 0 %}
+                                None
+                                {% else %}
+                                {{ current_leakage_info }}
+                                {% endif %}
+                            </h5>
+                            <!-- <p class="mb-0">
+                      <span class="text-success text-sm font-weight-bolder">+3%</span>
+                      since last week
+                    </p> -->
+                        </div>
+                    </div>
+                    <div class="col-4 text-end">
+                        <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                            <i class="ni ni-settings text-lg opacity-10" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End of Info Cards -->
+
+
+<!-- Hourly Charts -->
+<div class="row mt-4">
+    <div class="col-lg-5 mb-lg-0 mb-4">
+        <div class="card z-index-2 h-100">
+            <div class="card-header pb-0 pt-3 bg-transparent">
+                <h6 class="text-capitalize">Outlet Water Usage</h6>
+                <!-- <p class="text-sm mb-0">
+                <i class="fa fa-arrow-up text-success"></i>
+                <span class="font-weight-bold">4% more</span> in 2021
+              </p> -->
+            </div>
+            <div class="card-body p-3">
+                <div class="chart">
+                    <canvas id="hourly-chart-pie" class="chart-canvas" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7 mb-lg-0 mb-4">
+        <div class="card z-index-2 h-100">
+            <div class="card-header pb-0 pt-3 bg-transparent">
+                <h6 class="text-capitalize">Total Water Usage</h6>
+                <!-- <p class="text-sm mb-0">
+                <i class="fa fa-arrow-up text-success"></i>
+                <span class="font-weight-bold">4% more</span> in 2021
+              </p> -->
+            </div>
+            <div class="card-body p-3">
+                <div class="chart">
+                    <canvas id="hourly-chart-line" class="chart-canvas" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Hourly Charts -->
+
+<!-- Leakage Table -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h6>Leakage Monitoring</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Outlet
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    Section</th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Status</th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Amount Leaked (L)</th>
+                                <!-- <th class="text-secondary opacity-7"></th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-2 py-1">
+                                        <div>
+                                            <!-- <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3"
+                                                alt="user1"> -->
+                                            <i class="ni ni-bold-right me-3 my-auto"></i>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-sm">Outlet 1</h6>
+                                            <!-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> -->
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="text-xs font-weight-bold mb-0">Household 1</p>
+                                    <!-- <p class="text-xs text-secondary mb-0">Organization</p> -->
+                                </td>
+
+                                {% if current_leakage_info == 0 %}
+                                <td class="align-middle text-center text-sm">
+                                    <span class="badge badge-sm bg-gradient-success">OK</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-success text-xs font-weight-bold">{{ current_leakage_info // 2 }}</span>
+                                </td>
+                                {% else %}
+                                <td class="align-middle text-center text-sm">
+                                    <span class="badge badge-sm bg-gradient-danger">LEAKAGE</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-danger text-xs font-weight-bold">{{ current_leakage_info // 2 }}</span>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-2 py-1">
+                                        <div>
+                                            <!-- <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3"
+                                                alt="user1"> -->
+                                            <i class="ni ni-bold-right me-3 my-auto"></i>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-sm">Outlet 2</h6>
+                                            <!-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> -->
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="text-xs font-weight-bold mb-0">Household 2</p>
+                                    <!-- <p class="text-xs text-secondary mb-0">Organization</p> -->
+                                </td>
+
+                                {% if current_leakage_info == 0 %}
+                                <td class="align-middle text-center text-sm">
+                                    <span class="badge badge-sm bg-gradient-success">OK</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-success text-xs font-weight-bold">{{ current_leakage_info // 2}}</span>
+                                </td>
+                                {% else %}
+                                <td class="align-middle text-center text-sm">
+                                    <span class="badge badge-sm bg-gradient-danger">LEAKAGE</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-danger text-xs font-weight-bold">{{ current_leakage_info // 2 }}</span>
+                                </td>
+                                {% endif %}
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- End of Leakage Table -->
+
+<!-- Hourly Line Chart -->
+<script>
+    var ctx1 = document.getElementById("hourly-chart-line").getContext("2d");
+
+    var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+
+    gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+    new Chart(ctx1, {
+        type: "line",
+        data: {
+            labels: {{ hours | safe }},
+            datasets: [{
+                label: "Water Used",
+                tension: 0.4,
+                borderWidth: 0,
+                pointRadius: 0,
+                borderColor: "#8392ab",
+                backgroundColor: gradientStroke1,
+                borderWidth: 3,
+                fill: true,
+                data: {{ hour_consumption | safe }},
+                maxBarThickness: 6
+
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        padding: 10,
+                        color: '#fbfbfb',
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        color: 'black',
+                        padding: 20,
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+            },
+        },
+    });
+</script>
+
+<!-- Hourly Pie Chart -->
+<script>
+    var ctx1 = document.getElementById("hourly-chart-pie").getContext("2d");
+
+    var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+
+    gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+    new Chart(ctx1, {
+        type: "pie",
+        data: {
+            labels: {{ outlets | safe }},
+            datasets: [{
+                label: "Water Used",
+                backgroundColor: [
+                    '#2dce89',
+                    '#5e72e4'
+                ],
+                // fill: true,
+                data: {{ outlets_data | safe }},
+                hoverOffset: 5
+
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                }
+            },
+
+        },
+    });
+</script>
+
+<!-- Daily Line Chart -->
+<script>
+    var ctx1 = document.getElementById("daily-chart-line").getContext("2d");
+
+    var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+
+    gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+    new Chart(ctx1, {
+        type: "line",
+        data: {
+            labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            datasets: [{
+                label: "Water Used",
+                tension: 0.4,
+                borderWidth: 0,
+                pointRadius: 0,
+                borderColor: "#8392ab",
+                backgroundColor: gradientStroke1,
+                borderWidth: 3,
+                fill: true,
+                data: [400, 200, 300, 220, 350, 500, 300],
+                maxBarThickness: 6
+
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        padding: 10,
+                        color: '#fbfbfb',
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        color: 'black',
+                        padding: 20,
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+            },
+        },
+    });
+</script>
+
+<!-- Daily Pie Chart -->
+<script>
+    var ctx1 = document.getElementById("daily-chart-pie").getContext("2d");
+
+    var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+
+    gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+    new Chart(ctx1, {
+        type: "pie",
+        data: {
+            labels: ["Outlet 1", "Outlet 2"],
+            datasets: [{
+                label: "Water Used",
+                backgroundColor: [
+                    '#2dce89',
+                    '#5e72e4'
+                ],
+                // fill: true,
+                data: [120, 300],
+                hoverOffset: 5
+
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                }
+            },
+
+        },
+    });
+</script>
+
+
+<!-- Weekly Line Chart -->
+<script>
+    var ctx1 = document.getElementById("weekly-chart-line").getContext("2d");
+
+    var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+
+    gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+    new Chart(ctx1, {
+        type: "line",
+        data: {
+            labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+            datasets: [{
+                label: "Predicted Water Need",
+                tension: 0.4,
+                borderWidth: 0,
+                pointRadius: 0,
+                borderColor: "#8392ab",
+                backgroundColor: gradientStroke1,
+                borderWidth: 3,
+                fill: true,
+                data: [420, 300, 350, 290],
+                maxBarThickness: 6
+
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        padding: 10,
+                        color: '#fbfbfb',
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        color: 'black',
+                        padding: 20,
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+            },
+        },
+    });
+</script>
+
+<!-- Weekly Pie Chart -->
+<script>
+    var ctx1 = document.getElementById("weekly-chart-pie").getContext("2d");
+
+    var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+
+    gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+    new Chart(ctx1, {
+        type: "pie",
+        data: {
+            labels: ["Outlet 1", "Outlet 2"],
+            datasets: [{
+                label: "Predicted Water Need",
+                backgroundColor: [
+                    '#2dce89',
+                    '#5e72e4',
+                ],
+                // fill: true,
+                data: [140, 320],
+                hoverOffset: 5
+
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                }
+            },
+
+        },
+    });
+</script>
+
+
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+
+
+
+{% endblock content %}
