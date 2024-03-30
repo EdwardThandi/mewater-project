@@ -33,6 +33,20 @@ def dashboard():
     
     apartment_names = list(apartment_data_dict.keys())
     print(apartment_names)
+    
+    weeks = ["Week 0",
+            "Week 1",
+            "Week 2",
+            "Week 3",
+            "Week 4",
+            "Week 5",
+            ]
+    
+    apartment1 = list(apartment_data_dict['A'].values())
+    apartment2 = list(apartment_data_dict['B'].values())
+    apartment3 = list(apartment_data_dict['C'].values())
+    apartment4 = list(apartment_data_dict['D'].values())
+    apartment5 = list(apartment_data_dict['E'].values())
 
     current_date = date.today()
 
@@ -60,8 +74,11 @@ def dashboard():
 
     hours = list(hourly_consumption_dict.keys())
     hour_consumption = list(hourly_consumption_dict.values())
+    hour_consumption2 = [20,30]
 
     return render_template('dashboard/dashboard.html',
+                           apartment_names=apartment_names,
+                           weeks=weeks,
                            current_date=current_date,
                            current_leakage_info=current_leakage_info,
                            current_consumption=current_consumption,
@@ -69,4 +86,10 @@ def dashboard():
                            outlets=outlets,
                            outlets_data=outlets_data,
                            hours=hours,
-                           hour_consumption=hour_consumption,)
+                           hour_consumption=hour_consumption,
+                           apartment1=apartment1,
+                           apartment2=apartment2,
+                           apartment3=apartment3,
+                           apartment4=apartment4,
+                           apartment5=apartment5,
+                           )

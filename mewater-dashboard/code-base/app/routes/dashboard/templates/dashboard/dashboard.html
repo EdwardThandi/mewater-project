@@ -99,113 +99,165 @@
 </div>
 <!-- End of Hourly Charts -->
 
-<!-- Leakage Table -->
+<!-- Consumption Monitoring Chart -->
 <div class="row mt-4">
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>Leakage Monitoring</h6>
+                <h6>Apartment Consumption</h6>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
-                <div class="table-responsive p-0">
-                    <table class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Outlet
-                                </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                    Section</th>
-                                <th
-                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                    Status</th>
-                                <th
-                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                    Amount Leaked (L)</th>
-                                <!-- <th class="text-secondary opacity-7"></th> -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="d-flex px-2 py-1">
-                                        <div>
-                                            <!-- <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3"
-                                                alt="user1"> -->
-                                            <i class="ni ni-bold-right me-3 my-auto"></i>
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-sm">Outlet 1</h6>
-                                            <!-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> -->
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="text-xs font-weight-bold mb-0">Household 1</p>
-                                    <!-- <p class="text-xs text-secondary mb-0">Organization</p> -->
-                                </td>
-
-                                {% if current_leakage_info == 0 %}
-                                <td class="align-middle text-center text-sm">
-                                    <span class="badge badge-sm bg-gradient-success">OK</span>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <span class="text-success text-xs font-weight-bold">{{ current_leakage_info // 2 }}</span>
-                                </td>
-                                {% else %}
-                                <td class="align-middle text-center text-sm">
-                                    <span class="badge badge-sm bg-gradient-danger">LEAKAGE</span>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <span class="text-danger text-xs font-weight-bold">{{ current_leakage_info // 2 }}</span>
-                                </td>
-                                {% endif %}
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex px-2 py-1">
-                                        <div>
-                                            <!-- <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3"
-                                                alt="user1"> -->
-                                            <i class="ni ni-bold-right me-3 my-auto"></i>
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-sm">Outlet 2</h6>
-                                            <!-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> -->
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="text-xs font-weight-bold mb-0">Household 2</p>
-                                    <!-- <p class="text-xs text-secondary mb-0">Organization</p> -->
-                                </td>
-
-                                {% if current_leakage_info == 0 %}
-                                <td class="align-middle text-center text-sm">
-                                    <span class="badge badge-sm bg-gradient-success">OK</span>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <span class="text-success text-xs font-weight-bold">{{ current_leakage_info // 2}}</span>
-                                </td>
-                                {% else %}
-                                <td class="align-middle text-center text-sm">
-                                    <span class="badge badge-sm bg-gradient-danger">LEAKAGE</span>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <span class="text-danger text-xs font-weight-bold">{{ current_leakage_info // 2 }}</span>
-                                </td>
-                                {% endif %}
-
-                            </tr>
-
-                        </tbody>
-                    </table>
+                <div class="chart">
+                    <canvas id="consumption-chart-line" class="chart-canvas" height="500"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- End of Leakage Table -->
+<!-- End of Consumption Monitoring Chart -->
+
+
+<!-- Consumption Monitoring Chart -->
+<!-- Hourly Line Chart -->
+<script>
+    var ctx1 = document.getElementById("consumption-chart-line").getContext("2d");
+
+    var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+
+    gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+    new Chart(ctx1, {
+        type: "line",
+        data: {
+            labels: {{ weeks | safe }},
+        datasets: [{
+            label: "A",
+            tension: 0.4,
+            borderWidth: 0,
+            pointRadius: 0,
+            borderColor: "#005f73",
+            backgroundColor: gradientStroke1,
+            borderWidth: 3,
+            fill: true,
+            data: {{ apartment1 | safe }},
+        maxBarThickness: 6
+
+            },
+        {
+            label: "B",
+            tension: 0.4,
+            borderWidth: 0,
+            pointRadius: 0,
+            borderColor: "#e9d8a6",
+            backgroundColor: gradientStroke1,
+            borderWidth: 3,
+            fill: true,
+            data: {{ apartment2 | safe }},
+        maxBarThickness: 6
+    
+                },
+        {
+            label: "C",
+            tension: 0.4,
+            borderWidth: 0,
+            pointRadius: 0,
+            borderColor: "#ca6702",
+            backgroundColor: gradientStroke1,
+            borderWidth: 3,
+            fill: true,
+            data: {{ apartment3 | safe }},
+        maxBarThickness: 6
+        
+                    },
+        {
+            label: "D",
+            tension: 0.4,
+            borderWidth: 0,
+            pointRadius: 0,
+            borderColor: "#ae2012",
+            backgroundColor: gradientStroke1,
+            borderWidth: 3,
+            fill: true,
+            data: {{ apartment4 | safe }},
+        maxBarThickness: 6
+            
+                        },
+        {
+            label: "E",
+            tension: 0.4,
+            borderWidth: 0,
+            pointRadius: 0,
+            borderColor: "#8392ab",
+            backgroundColor: gradientStroke1,
+            borderWidth: 3,
+            fill: true,
+            data: {{ apartment5 | safe }},
+        maxBarThickness: 6
+                
+                            }],
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+            }
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        scales: {
+            y: {
+                grid: {
+                    drawBorder: true,
+                    display: true,
+                    drawOnChartArea: true,
+                    drawTicks: true,
+                    borderDash: [5, 5]
+                },
+                ticks: {
+                    display: true,
+                    padding: 10,
+                    color: '#fbfbfb',
+                    font: {
+                        size: 11,
+                        family: "Open Sans",
+                        style: 'normal',
+                        lineHeight: 2
+                    },
+                }
+            },
+            x: {
+                grid: {
+                    drawBorder: true,
+                    display: false,
+                    drawOnChartArea: false,
+                    drawTicks: false,
+                    borderDash: [5, 5]
+                },
+                ticks: {
+                    display: true,
+                    color: 'black',
+                    padding: 20,
+                    font: {
+                        size: 11,
+                        family: "Open Sans",
+                        style: 'normal',
+                        lineHeight: 2
+                    },
+                }
+            },
+        },
+    },
+    });
+</script>
+<!-- End of Consumption Monitoring Chart -->
+
+
 
 <!-- Hourly Line Chart -->
 <script>
@@ -220,77 +272,78 @@
         type: "line",
         data: {
             labels: {{ hours | safe }},
-            datasets: [{
-                label: "Water Used",
-                tension: 0.4,
-                borderWidth: 0,
-                pointRadius: 0,
-                borderColor: "#8392ab",
-                backgroundColor: gradientStroke1,
-                borderWidth: 3,
-                fill: true,
-                data: {{ hour_consumption | safe }},
-                maxBarThickness: 6
+        datasets: [{
+            label: "Water Used",
+            tension: 0.4,
+            borderWidth: 0,
+            pointRadius: 0,
+            borderColor: "#8392ab",
+            backgroundColor: gradientStroke1,
+            borderWidth: 3,
+            fill: true,
+            data: {{ hour_consumption | safe }},
+        maxBarThickness: 6
 
             }],
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false,
+            }
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        scales: {
+            y: {
+                grid: {
+                    drawBorder: false,
+                    display: true,
+                    drawOnChartArea: true,
+                    drawTicks: false,
+                    borderDash: [5, 5]
+                },
+                ticks: {
+                    display: true,
+                    padding: 10,
+                    color: '#fbfbfb',
+                    font: {
+                        size: 11,
+                        family: "Open Sans",
+                        style: 'normal',
+                        lineHeight: 2
+                    },
                 }
             },
-            interaction: {
-                intersect: false,
-                mode: 'index',
-            },
-            scales: {
-                y: {
-                    grid: {
-                        drawBorder: false,
-                        display: true,
-                        drawOnChartArea: true,
-                        drawTicks: false,
-                        borderDash: [5, 5]
-                    },
-                    ticks: {
-                        display: true,
-                        padding: 10,
-                        color: '#fbfbfb',
-                        font: {
-                            size: 11,
-                            family: "Open Sans",
-                            style: 'normal',
-                            lineHeight: 2
-                        },
-                    }
+            x: {
+                grid: {
+                    drawBorder: false,
+                    display: false,
+                    drawOnChartArea: false,
+                    drawTicks: false,
+                    borderDash: [5, 5]
                 },
-                x: {
-                    grid: {
-                        drawBorder: false,
-                        display: false,
-                        drawOnChartArea: false,
-                        drawTicks: false,
-                        borderDash: [5, 5]
+                ticks: {
+                    display: true,
+                    color: 'black',
+                    padding: 20,
+                    font: {
+                        size: 11,
+                        family: "Open Sans",
+                        style: 'normal',
+                        lineHeight: 2
                     },
-                    ticks: {
-                        display: true,
-                        color: 'black',
-                        padding: 20,
-                        font: {
-                            size: 11,
-                            family: "Open Sans",
-                            style: 'normal',
-                            lineHeight: 2
-                        },
-                    }
-                },
+                }
             },
         },
+    },
     });
 </script>
+<!-- End of Hourly Line Chart -->
 
 <!-- Hourly Pie Chart -->
 <script>
@@ -305,31 +358,33 @@
         type: "pie",
         data: {
             labels: {{ outlets | safe }},
-            datasets: [{
-                label: "Water Used",
-                backgroundColor: [
-                    '#2dce89',
-                    '#5e72e4'
-                ],
-                // fill: true,
-                data: {{ outlets_data | safe }},
-                hoverOffset: 5
+        datasets: [{
+            label: "Water Used",
+            backgroundColor: [
+                '#2dce89',
+                '#5e72e4'
+            ],
+            // fill: true,
+            data: {{ outlets_data | safe }},
+        hoverOffset: 5
 
             }],
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom',
-                }
-            },
-
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+            }
         },
+
+    },
     });
 </script>
+<!-- End of Hourly Pie Chart -->
+
 
 <!-- Daily Line Chart -->
 <script>
@@ -415,6 +470,7 @@
         },
     });
 </script>
+
 
 <!-- Daily Pie Chart -->
 <script>
