@@ -1,5 +1,3 @@
-# from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from sqlalchemy.dialects.postgresql import JSON
 from app import db
 
 
