@@ -1,4 +1,4 @@
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+# from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.dialects.postgresql import JSON
 from app import db
 
@@ -14,4 +14,3 @@ class ApartmentWaterConsumption(db.Model):
     instance_4 = db.Column(db.String(50), nullable=False)
     instance_5 = db.Column(db.String(50), nullable=False)
     instance_6 = db.Column(db.String(50), nullable=False)
-    

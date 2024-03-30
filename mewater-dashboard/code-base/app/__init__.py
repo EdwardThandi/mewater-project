@@ -1,7 +1,7 @@
 # import boto3
 import logging
 from flask import Flask
-from flask_migrate import Migrate
+# from flask_migrate import Migrate
 # from flask_login import LoginManager
 # from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 # from app.config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 
-migrate = Migrate()
+# migrate = Migrate()
 db = SQLAlchemy()
 # csrf = CSRFProtect()
 
@@ -21,7 +21,7 @@ def create_app():
 
     # * app extensions / 'services'
     db.init_app(app)
-    migrate.init_app(app, db)
+    # migrate.init_app(app, db)
     # csrf.init_app(app)
 
     # * Flask-login
