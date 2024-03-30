@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template
 from datetime import datetime, date
+from app import db
+from app.models import ApartmentWaterConsumption
+from pprint import pprint
 
 # Create Blueprint
 dashboard_view = Blueprint('dashboard_view',
@@ -11,6 +14,25 @@ dashboard_view = Blueprint('dashboard_view',
 @dashboard_view.route('/dashboard/')
 # @login_required
 def dashboard():
+    
+    apartment_data = db.session.query(ApartmentWaterConsumption).all()
+    print(apartment_data)
+    
+    apartment_data_dict = {}
+    for i in apartment_data:
+        apartment_data_dict[i.apartment_name] = {
+            "Week 0": i.instance_1,
+            "Week 1": i.instance_2,
+            "Week 2": i.instance_3,
+            "Week 3": i.instance_4,
+            "Week 4": i.instance_5,
+            "Week 5": i.instance_6
+        }
+        
+    pprint(apartment_data_dict)
+    
+    apartment_names = list(apartment_data_dict.keys())
+    print(apartment_names)
 
     current_date = date.today()
 
