@@ -51,7 +51,7 @@ def dashboard():
     current_date = date.today()
 
     # latest_outlet_data = db.session.query(IotWaterConsumption).first()
-    latest_outlet_data = db.session.query(IotWaterConsumption).limit(6).all()
+    latest_outlet_data = db.session.query(IotWaterConsumption).order_by(IotWaterConsumption.id.desc()).limit(6).all()
 
     print(latest_outlet_data)
 
