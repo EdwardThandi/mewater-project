@@ -50,20 +50,26 @@ def dashboard():
 
     current_date = date.today()
 
-    current_leakage_info = 0
+    current_leakage_info = 50
 
     current_consumption_info = {
-        "outlet_1": 0,
-        "outlet_2": 0
+        "outlet_1": 250,
+        "outlet_2": 200
     }
-    current_consumption = 0
+    current_consumption = 600
     outlets = list(current_consumption_info.keys())
     outlets_data = list(current_consumption_info.values())
 
     # hourly_consumption = []
     hourly_consumption_dict = {
-        "0": "0",
-        "1": "0",
+        "0": "2",
+        "1": "3",
+        "2": "4",
+        "3": "5",
+        "4": "4",
+        "5": "5",
+        "6": "4",
+
     }
     # for i in hourly_consumption:
     #     time = int(i['time'])
