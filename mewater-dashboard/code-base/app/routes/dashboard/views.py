@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from datetime import datetime, date
 from app import db
-from app.models import ApartmentWaterConsumption
+from app.models import ApartmentWaterConsumption, IotWaterConsumption
 from pprint import pprint
 
 # Create Blueprint
@@ -14,10 +14,10 @@ dashboard_view = Blueprint('dashboard_view',
 @dashboard_view.route('/dashboard/')
 # @login_required
 def dashboard():
-    
+
     apartment_data = db.session.query(ApartmentWaterConsumption).all()
     print(apartment_data)
-    
+
     apartment_data_dict = {}
     for i in apartment_data:
         apartment_data_dict[i.apartment_name] = {
@@ -28,20 +28,20 @@ def dashboard():
             "Week 4": i.instance_5,
             "Week 5": i.instance_6
         }
-        
+
     pprint(apartment_data_dict)
-    
+
     apartment_names = list(apartment_data_dict.keys())
     print(apartment_names)
-    
+
     weeks = ["Week 0",
-            "Week 1",
-            "Week 2",
-            "Week 3",
-            "Week 4",
-            "Week 5",
-            ]
-    
+             "Week 1",
+             "Week 2",
+             "Week 3",
+             "Week 4",
+             "Week 5",
+             ]
+
     apartment1 = list(apartment_data_dict['A'].values())
     apartment2 = list(apartment_data_dict['B'].values())
     apartment3 = list(apartment_data_dict['C'].values())
@@ -50,37 +50,33 @@ def dashboard():
 
     current_date = date.today()
 
-    current_leakage_info = 50
+    # latest_outlet_data = db.session.query(IotWaterConsumption).first()
+    latest_outlet_data = db.session.query(IotWaterConsumption).limit(6).all()
 
+    print(latest_outlet_data)
+
+
+    current_consumption_data = latest_outlet_data[0]
     current_consumption_info = {
-        "outlet_1": 250,
-        "outlet_2": 200
+        "outlet_1": current_consumption_data.meter2Volume,
+        "outlet_2": current_consumption_data.meter3Volume,
     }
-    current_consumption = 600
+    current_consumption = float(
+        current_consumption_data.meter2Volume) + float(current_consumption_data.meter3Volume)
     outlets = list(current_consumption_info.keys())
     outlets_data = list(current_consumption_info.values())
+    
+    current_leakage_info = float(current_consumption_data.meter1Volume) - current_consumption
 
-    # hourly_consumption = []
-    hourly_consumption_dict = {
-        "0": "2",
-        "1": "3",
-        "2": "4",
-        "3": "5",
-        "4": "4",
-        "5": "5",
-        "6": "4",
+    hourly_consumption_dict = {}
+    for i, data in enumerate(latest_outlet_data):
 
-    }
-    # for i in hourly_consumption:
-    #     time = int(i['time'])
-    #     parsed_time = datetime.fromtimestamp(time).hour
-    #     total_volume = int(i['outlet1_volume']) + int(i['outlet2_volume'])
+        total_volume = float(data.meter2Volume) + float(data.meter3Volume)
 
-    #     hourly_consumption_dict[parsed_time] = total_volume
+        hourly_consumption_dict[i] = total_volume
 
     hours = list(hourly_consumption_dict.keys())
     hour_consumption = list(hourly_consumption_dict.values())
-    hour_consumption2 = [20,30]
 
     return render_template('dashboard/dashboard.html',
                            apartment_names=apartment_names,
